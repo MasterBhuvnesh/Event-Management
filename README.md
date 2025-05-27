@@ -20,3 +20,5 @@ This project uses the following libraries:
 - `expo-sharing`
 - `expo-dev-client`
 - `expo-device`
+- `expo-auth-session`
+- `expo-document-picker`
