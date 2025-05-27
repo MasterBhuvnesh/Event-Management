@@ -1,6 +1,6 @@
 import { useClerk } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
-import { Text, TouchableOpacity } from 'react-native';
+import { Alert, Text, TouchableOpacity } from 'react-native';
 
 export const SignOutButton = () => {
   const { signOut } = useClerk();
@@ -15,8 +15,20 @@ export const SignOutButton = () => {
     }
   };
 
+  const confirmSignOut = () => {
+    Alert.alert(
+      'Sign Out',
+      'Are you sure you want to sign out?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Sign Out', style: 'destructive', onPress: handleSignOut },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
-    <TouchableOpacity onPress={handleSignOut}>
+    <TouchableOpacity onPress={confirmSignOut}>
       <Text
         style={{
           color: '#fff',
