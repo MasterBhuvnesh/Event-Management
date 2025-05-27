@@ -47,6 +47,11 @@ export default function RootLayout() {
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(main)" options={{ headerShown: false }} />
+          <Stack.Screen name="events/[id]" options={{ headerShown: true }} />
+          <Stack.Screen
+            name="ticket/[qrcode]"
+            options={{ headerShown: true }}
+          />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="light" />

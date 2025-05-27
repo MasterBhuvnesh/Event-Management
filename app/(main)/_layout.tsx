@@ -1,9 +1,9 @@
+import { AppIcon } from '@/components/AppIcon';
 import { theme } from '@/constants/theme';
 import { Tabs } from 'expo-router';
-import { Home, User } from 'lucide-react-native'; // Import Lucide icons
+import { Home, Ticket, User } from 'lucide-react-native';
 import React from 'react';
 import { Pressable } from 'react-native';
-import { AppIcon } from '../../components/AppIcon'; // Adjust path as needed
 
 function TabBarIcon(props: {
   Icon: React.ComponentType<any>;
@@ -43,6 +43,15 @@ export default function TabLayout() {
           title: 'Home',
           tabBarIcon: ({ color }) => (
             <TabBarIcon Icon={Home} color={color} size={20} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ticket"
+        options={{
+          title: 'Tickets',
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon Icon={Ticket} color={color} size={20} />
           ),
         }}
       />
