@@ -238,5 +238,3 @@ export default function QRScreen() {
     </View>
   );
 }
-
-// https://sasandasaumya.medium.com/building-a-qr-code-scanner-with-react-native-expo-df8e8f9e4c08

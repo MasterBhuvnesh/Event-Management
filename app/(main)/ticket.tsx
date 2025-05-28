@@ -1,25 +1,47 @@
 import { AppIcon } from '@/components/AppIcon';
 import { theme } from '@/constants/theme';
+import { useToast } from '@/context/ToastContext';
+import useUserData from '@/hooks/useUserData';
 import { Link } from 'expo-router';
 import { ScanQrCodeIcon } from 'lucide-react-native';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 export default function TicketScreen() {
+  const { userData, loading, error } = useUserData();
+  const { showToast } = useToast();
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="small" color={theme.colors.text} />
+      </View>
+    );
+  }
+  if (error) {
+    return showToast(error, 'error');
+  }
   return (
     <View style={styles.container}>
       <View style={styles.ticketBox}>
         <Text style={styles.title}>My Ticket</Text>
       </View>
-      <Pressable style={styles.scanButton}>
-        <Link href="/scan">
-          <AppIcon
-            Icon={ScanQrCodeIcon}
-            size={24}
-            color={theme.colors.background}
-          />
-        </Link>
-      </Pressable>
+      {userData?.role == 'Admin' && (
+        <Pressable style={styles.scanButton}>
+          <Link href="/scan">
+            <AppIcon
+              Icon={ScanQrCodeIcon}
+              size={24}
+              color={theme.colors.background}
+            />
+          </Link>
+        </Pressable>
+      )}
     </View>
   );
 }

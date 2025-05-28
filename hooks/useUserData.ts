@@ -1,4 +1,3 @@
-import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
 import { User } from '@/types/types';
 import { useUser } from '@clerk/clerk-expo';
@@ -9,7 +8,6 @@ export default function useUserData() {
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { showToast } = useToast();
   useEffect(() => {
     const fetchUserData = async () => {
       if (!user?.id) {
@@ -38,7 +36,6 @@ export default function useUserData() {
       } catch (err: any) {
         setError(err.message);
         console.error('Error fetching user data:', err); // Debug log
-        showToast('Failed to fetch user data', 'error');
       } finally {
         setLoading(false);
       }

@@ -1,0 +1,10 @@
+- Refactor hooks and remove toast notifications.
+- Restructure file organization.
+- Improve user interface.
+- Enhance ticket download and sharing functionality.
+- Remove all debug logs.
+- Use AppIcons and Lucide for icons.
+- Implement custom toast notifications.
+- Add a theme using constants/theme.
+- Move all TypeScript types to the types folder.
+- Improve the main page.
