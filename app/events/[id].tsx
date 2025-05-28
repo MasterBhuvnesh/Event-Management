@@ -16,6 +16,75 @@ import {
 } from '@expo/vector-icons';
 import { Pressable } from 'react-native';
 
+const styles = StyleSheet.create({
+  card: {
+    margin: 16,
+    borderRadius: 12,
+    backgroundColor: theme.colors.background,
+    elevation: 3,
+    shadowColor: theme.colors.gray[800],
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    backgroundColor: theme.colors.gray[200],
+    borderTopLeftRadius: 12,
+  },
+  content: {
+    padding: 16,
+    backgroundColor: theme.colors.background,
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 8,
+    color: theme.colors.text,
+  },
+  description: {
+    fontSize: 16,
+    marginBottom: 8,
+    color: theme.colors.gray[300],
+    lineHeight: 22,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  icon: {
+    marginRight: 6,
+  },
+  info: {
+    fontSize: 14,
+    color: theme.colors.gray[500],
+  },
+  registerContainer: {
+    padding: 16,
+    alignItems: 'center',
+    backgroundColor: theme.colors.background,
+  },
+  registerButton: {
+    backgroundColor: theme.colors.info[500],
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  registerButtonPressed: {
+    backgroundColor: theme.colors.info[700],
+    opacity: 0.85,
+  },
+  registerText: {
+    color: theme.colors.text,
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
+
 export default function EventPage() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { event, loading, error } = useSingleEventData(id);
@@ -28,9 +97,9 @@ export default function EventPage() {
     return <Text>No event found.</Text>;
 
   const eventData = event[0];
+
   const handleRegister = async () => {
     if (!userData) {
-      // alert('User data not loaded. Please try again.');
       showToast('User data not loaded. Please try again.', 'error');
       return;
     }
@@ -51,7 +120,21 @@ export default function EventPage() {
           showToast(`Already registered for event ${eventData.title}`, 'info');
         }
 
-        router.push(`/ticket/${code}?qrid=${registrationId}`);
+        // Create event info JSON
+        const eventInfo = {
+          title: eventData.title,
+          description: eventData.description,
+          starttime: eventData.start_time,
+          endtime: eventData.end_time,
+          location: eventData.location,
+          img: eventData.banner_image_url,
+        };
+
+        router.push(
+          `/ticket/${code}?qrid=${registrationId}&eventinfo=${encodeURIComponent(
+            JSON.stringify(eventInfo)
+          )}`
+        );
       })
       .catch((err) => {
         console.error(err);
@@ -140,80 +223,12 @@ export default function EventPage() {
             ]}
             onPress={handleRegister}
           >
-            <Text style={styles.registerText}>Register</Text>
+            <Text style={styles.registerText}>Show My Ticket</Text>
           </Pressable>
         )}
       </View>
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  card: {
-    margin: 16,
-    borderRadius: 12,
-    backgroundColor: theme.colors.background,
-    elevation: 3,
-    shadowColor: theme.colors.gray[800],
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 2 },
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-    height: 200,
-    backgroundColor: theme.colors.gray[200],
-    borderTopLeftRadius: 12,
-  },
-  content: {
-    padding: 16,
-    backgroundColor: theme.colors.background,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: theme.colors.text,
-  },
-  description: {
-    fontSize: 16,
-    marginBottom: 8,
-    color: theme.colors.gray[300],
-    lineHeight: 22,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  icon: {
-    marginRight: 6,
-  },
-  info: {
-    fontSize: 14,
-    color: theme.colors.gray[500],
-  },
-  registerContainer: {
-    padding: 16,
-    alignItems: 'center',
-    backgroundColor: theme.colors.background,
-  },
-  registerButton: {
-    backgroundColor: theme.colors.info[500],
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  registerButtonPressed: {
-    backgroundColor: theme.colors.info[700],
-    opacity: 0.85,
-  },
-  registerText: {
-    color: theme.colors.text,
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
-});
 
 // Convert into model later

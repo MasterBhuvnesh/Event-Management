@@ -4,6 +4,7 @@ import {
   Inter_400Regular,
   Inter_500Medium,
   Inter_700Bold,
+  Inter_900Black,
   useFonts,
 } from '@expo-google-fonts/inter';
 import { Stack } from 'expo-router';
@@ -24,6 +25,7 @@ export default function RootLayout() {
     Regular: Inter_400Regular,
     Medium: Inter_500Medium,
     Bold: Inter_700Bold,
+    Black: Inter_900Black,
   });
 
   useEffect(() => {
@@ -53,6 +55,7 @@ export default function RootLayout() {
             options={{ headerShown: true }}
           />
           <Stack.Screen name="+not-found" />
+          <Stack.Screen name="scan" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="light" />
       </ToastProvider>
