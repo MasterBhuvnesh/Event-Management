@@ -21,7 +21,7 @@ export default function QRScreen() {
     qrId: qrid,
     qrCode: qrcode,
   });
-
+  console.log('QR Data 👀👀:', qrData); // Debugging line to check QR data
   if (!qrcode || !qrid) {
     let message = !qrcode ? 'No QR code provided.' : 'No QR ID provided.';
     return (

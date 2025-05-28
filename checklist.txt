@@ -1,10 +1,14 @@
-- Refactor hooks and remove toast notifications.
+- Refactor hooks and remove existing toast notifications.
 - Restructure file organization.
-- Improve user interface.
+- Improve user interface design.
 - Enhance ticket download and sharing functionality.
-- Remove all debug logs.
+- Remove all debugging logs.
 - Use AppIcons and Lucide for icons.
 - Implement custom toast notifications.
-- Add a theme using constants/theme.
-- Move all TypeScript types to the types folder.
+- Introduce theming using constants/theme.
+- Move all TypeScript types to the types directory.
 - Improve the main page.
+- Add a Reloader component to each screen.
+- Integrate Expo notifications.
+- Request permissions for all features (camera, sharing, etc.).
+- Add necessary permissions to app.json and other relevant files if required.

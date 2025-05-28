@@ -2,7 +2,7 @@ import { AppIcon } from '@/components/AppIcon';
 import { theme } from '@/constants/theme';
 import { useToast } from '@/context/ToastContext';
 import useUserData from '@/hooks/useUserData';
-import { Link } from 'expo-router';
+import { router } from 'expo-router';
 import { ScanQrCodeIcon } from 'lucide-react-native';
 import React from 'react';
 import {
@@ -32,14 +32,20 @@ export default function TicketScreen() {
         <Text style={styles.title}>My Ticket</Text>
       </View>
       {userData?.role == 'Admin' && (
-        <Pressable style={styles.scanButton}>
-          <Link href="/scan">
-            <AppIcon
-              Icon={ScanQrCodeIcon}
-              size={24}
-              color={theme.colors.background}
-            />
-          </Link>
+        <Pressable
+          style={styles.scanButton}
+          onPress={() => {
+            router.push({
+              pathname: '/scan/[id]',
+              params: { id: userData?.id },
+            });
+          }}
+        >
+          <AppIcon
+            Icon={ScanQrCodeIcon}
+            size={24}
+            color={theme.colors.background}
+          />
         </Pressable>
       )}
     </View>

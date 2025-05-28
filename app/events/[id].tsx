@@ -111,13 +111,18 @@ export default function EventPage() {
           );
           showToast(
             `Successfully registered for event ${eventData.title}`,
-            'success'
+            'success',
+            1200
           );
         } else {
           console.log(
             `You have already registered for event ${eventData.title} with registration ID: ${registrationId}, code: ${code}`
           );
-          showToast(`Already registered for event ${eventData.title}`, 'info');
+          showToast(
+            `Already registered for event ${eventData.title}`,
+            'info',
+            1200
+          );
         }
 
         // Create event info JSON

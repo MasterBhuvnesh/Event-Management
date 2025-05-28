@@ -17,3 +17,7 @@ export type EventRegistrationInsert = Omit<
 export type EventRegistrationUpdate = Partial<
   Omit<EventRegistration, 'id' | 'event_id' | 'user_id' | 'registration_time'>
 >;
+export type EventRegistrationCheckIn = Omit<
+  EventRegistration,
+  'id' | 'code' | 'checked_in_at' | 'checked_in_by'
+>;

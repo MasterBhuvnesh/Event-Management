@@ -55,7 +55,7 @@ export default function RootLayout() {
             options={{ headerShown: true }}
           />
           <Stack.Screen name="+not-found" />
-          <Stack.Screen name="scan" options={{ headerShown: false }} />
+          <Stack.Screen name="scan/[id]" options={{ headerShown: false }} />
         </Stack>
         <StatusBar style="light" />
       </ToastProvider>

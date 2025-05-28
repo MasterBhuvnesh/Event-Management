@@ -1,5 +1,6 @@
 import { AppIcon } from '@/components/AppIcon';
 import { theme } from '@/constants/theme';
+import { ToastType } from '@/types/types';
 import { AlertTriangle, CheckCircle, Info, XCircle } from 'lucide-react-native';
 import React, { useEffect, useState } from 'react';
 import {
@@ -11,7 +12,6 @@ import {
   ViewStyle,
 } from 'react-native';
 
-type ToastType = 'success' | 'error' | 'info' | 'warning';
 type ColorIntensity = 50 | 200 | 700;
 
 interface ToastProps {
