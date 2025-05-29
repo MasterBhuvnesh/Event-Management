@@ -30,6 +30,16 @@ export default function TicketScreen() {
     <View style={styles.container}>
       <View style={styles.ticketBox}>
         <Text style={styles.title}>My Ticket</Text>
+        <Text
+          style={{
+            color: theme.colors.text,
+            fontSize: 16,
+            fontFamily: 'Regular',
+            textAlign: 'center',
+          }}
+        >
+          planning how to show the ticket details here
+        </Text>
       </View>
       {userData?.role == 'Admin' && (
         <Pressable
