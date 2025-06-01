@@ -1,17 +1,17 @@
-name: Publish preview update
+name: Publish Update - Production
+
+# description:
+# -  This workflow is triggered on pushes to the production branch and updates the app version.
+# -  It uses the `update` job type to handle the update process.
+# -  It directly show the updates in the app without requiring a rebuild or redeployment.
 
 on:
   push:
     branches: ['production']
 
 jobs:
-  publish_preview_update:
-    name: Publish preview update
-    type: update
-    params:
-      branch: ${{ github.ref_name || 'test' }}
-    update:
+  update:
     name: Update
     type: update
     params:
-      branch: ${{ github.ref_name || 'test'}}
+      branch: ${{ github.ref_name || 'test' }}
