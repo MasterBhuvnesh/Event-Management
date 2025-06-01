@@ -1,0 +1,2 @@
+# Preserve production-specific files during merges
+.eas/workflow/update.yml merge=ours
