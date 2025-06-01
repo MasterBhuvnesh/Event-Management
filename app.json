@@ -33,7 +33,11 @@
         "backgroundColor": "#000000"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.bhuvneshverma.event"
+      "package": "com.bhuvneshverma.event",
+      "associatedDomains": [
+        "applinks:uncommon-zebra-27.clerk.accounts.dev",
+        "webcredentials:uncommon-zebra-27.clerk.accounts.dev"
+      ]
     },
     "web": {
       "bundler": "metro",
