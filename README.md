@@ -24,3 +24,6 @@ This project uses the following libraries:
 - `expo-document-picker`
 - `@supabase/supabase-js: 2.49.5-next.1`
 - `qrcode`
+- `expo-notifications`
+- `expo-network`
+- `expo-file-system`
