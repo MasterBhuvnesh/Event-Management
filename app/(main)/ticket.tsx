@@ -1,14 +1,16 @@
 import { AppIcon } from '@/components/AppIcon';
-import DOMComponent from '@/components/test';
 import { theme } from '@/constants/theme';
 import { useToast } from '@/context/ToastContext';
 import useUserData from '@/hooks/useUserData';
+import { supabase } from '@/lib/supabase';
 import { router } from 'expo-router';
-import { ScanQrCodeIcon } from 'lucide-react-native';
-import React from 'react';
+import { RefreshCw, ScanQrCodeIcon } from 'lucide-react-native';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Image,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -17,6 +19,37 @@ import {
 export default function TicketScreen() {
   const { userData, loading, error } = useUserData();
   const { showToast } = useToast();
+
+  const [files, setFiles] = useState<any[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(true);
+
+  const fetchFiles = useCallback(async () => {
+    if (!userData?.id) return;
+
+    setLoadingFiles(true);
+    const folder = userData.id;
+
+    const { data, error } = await supabase.storage.from('qrtest').list(folder, {
+      limit: 100,
+      offset: 0,
+      sortBy: { column: 'name', order: 'asc' },
+    });
+
+    if (error) {
+      console.error(error);
+      showToast('Failed to load tickets', 'error');
+    } else {
+      setFiles(data ?? []);
+      // console.log(' Storage Files  are fetched:', data); //Debug file
+    }
+
+    setLoadingFiles(false);
+  }, [userData, showToast]);
+
+  useEffect(() => {
+    fetchFiles();
+  }, [fetchFiles]);
+
   if (loading) {
     return (
       <View style={styles.container}>
@@ -24,26 +57,60 @@ export default function TicketScreen() {
       </View>
     );
   }
+
   if (error) {
-    return showToast(error, 'error');
+    showToast(error, 'error');
+    return null;
   }
+
   return (
     <View style={styles.container}>
       <View style={styles.ticketBox}>
-        <Text style={styles.title}>My Ticket</Text>
-        <DOMComponent name="Europa" />
-        <Text
-          style={{
-            color: theme.colors.text,
-            fontSize: 16,
-            fontFamily: 'Regular',
-            textAlign: 'center',
-          }}
-        >
-          planning how to show the ticket details here
-        </Text>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>My Ticket</Text>
+          <Pressable
+            style={styles.reloadButton}
+            onPress={fetchFiles}
+            disabled={loadingFiles}
+            accessibilityLabel="Reload tickets"
+          >
+            <AppIcon
+              Icon={RefreshCw}
+              size={22}
+              color={theme.colors.text}
+              style={{ opacity: loadingFiles ? 0.5 : 1 }}
+            />
+          </Pressable>
+        </View>
+
+        {loadingFiles ? (
+          <ActivityIndicator size="small" color={theme.colors.text} />
+        ) : files.length === 0 ? (
+          <Text style={styles.message}>No tickets found</Text>
+        ) : (
+          <ScrollView contentContainerStyle={{ paddingTop: 16 }}>
+            {files.map((file) => {
+              if (!userData) return null;
+              const { publicUrl } = supabase.storage
+                .from('qrtest')
+                .getPublicUrl(`${userData.id}/${file.name}`).data;
+
+              return (
+                <View key={file.name} style={styles.qrContainer}>
+                  <Image
+                    source={{ uri: publicUrl }}
+                    style={styles.qrImage}
+                    resizeMode="contain"
+                  />
+                  <Text style={styles.qrText}>{file.name}</Text>
+                </View>
+              );
+            })}
+          </ScrollView>
+        )}
       </View>
-      {userData?.role == 'Admin' && (
+
+      {userData?.role === 'Admin' && (
         <Pressable
           style={styles.scanButton}
           onPress={() => {
@@ -73,14 +140,47 @@ const styles = StyleSheet.create({
   },
   ticketBox: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    width: '100%',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 8,
+  },
+  reloadButton: {
+    padding: 8,
   },
   title: {
     fontSize: 28,
     fontFamily: 'Black',
     color: theme.colors.text,
     textAlign: 'center',
+  },
+  message: {
+    fontSize: 16,
+    fontFamily: 'Regular',
+    color: theme.colors.text,
+    marginTop: 20,
+    textAlign: 'center',
+  },
+  qrContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  qrImage: {
+    width: 200,
+    height: 200,
+    borderRadius: 8,
+  },
+  qrText: {
+    marginTop: 8,
+    fontSize: 14,
+    color: theme.colors.text,
+    fontFamily: 'Regular',
   },
   scanButton: {
     position: 'absolute',

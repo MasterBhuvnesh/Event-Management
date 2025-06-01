@@ -23,3 +23,4 @@ This project uses the following libraries:
 - `expo-auth-session`
 - `expo-document-picker`
 - `@supabase/supabase-js: 2.49.5-next.1`
+- `qrcode`

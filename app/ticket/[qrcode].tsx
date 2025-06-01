@@ -1,17 +1,77 @@
 import { QRCodeDisplay } from '@/components/QRcode';
 import { theme } from '@/constants/theme';
+import { useToast } from '@/context/ToastContext';
 import { formatDate } from '@/utils/date';
+import { generateQRCode } from '@/utils/generateticket';
 import { Image } from 'expo-image';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Text, View } from 'react-native';
+
+function useGenerateAndShareTicket({
+  qrid,
+  qrcode,
+  userid,
+}: {
+  qrid?: string;
+  qrcode?: string;
+  userid?: string;
+}) {
+  const { showToast } = useToast();
+  const handleShareTicket = useCallback(async () => {
+    try {
+      const resultData = await generateQRCode({
+        qrId: qrid!,
+        qrCode: qrcode!,
+        userId: userid!,
+      });
+      if (!resultData.exists == false && resultData.publicUrl) {
+        console.log(
+          '➕ Ticket 🎫 already exists, not generating new one , Here Ticket 🎫:',
+          resultData.publicUrl
+        ); // Debugging line to check if ticket already exists
+        showToast('Ticket 🎫 already exists, not generating new one', 'info'); // change later
+        return;
+      } else if (resultData.exists == true && resultData.publicUrl) {
+        console.log(
+          '✔️ Ticket 🎫 does not  exists, Here Ticket 🎫:',
+          resultData.publicUrl
+        ); // Debugging line to check Ticket 🎫 URL
+        showToast('Ticket 🎫 generated successfully!', 'success'); // change later
+      } else {
+        console.error('No Ticket 🎫 URL returned'); // Debugging line to check if URL is missing
+        showToast('No Ticket 🎫', 'error'); // change later
+      }
+    } catch (error: any) {
+      console.error('❌ Error generating Ticket 🎫:', error); // Debugging line to check error
+      showToast(error.message || 'Error generating Ticket 🎫', 'error'); // change later
+    }
+  }, [qrid, qrcode, userid]);
+
+  useEffect(() => {
+    if (qrid && qrcode && userid) {
+      handleShareTicket();
+    }
+  }, [qrid, qrcode, userid, handleShareTicket]);
+
+  return handleShareTicket;
+}
+
 export default function QRScreen() {
-  const { qrcode, qrid, eventinfo } = useLocalSearchParams<{
+  const { qrcode, qrid, eventinfo, userid } = useLocalSearchParams<{
     qrcode: string;
     qrid?: string;
     eventinfo?: string;
+    userid?: string;
   }>();
+  const { showToast } = useToast();
+  useGenerateAndShareTicket({ qrid, qrcode, userid });
 
+  // console.log('Paramters for QR Page :', {
+  //   qrId: qrid,
+  //   qrCode: qrcode,
+  //   userId: userid,
+  // }); // Debugging line to check parameters
   const parsedEventInfo = eventinfo
     ? JSON.parse(decodeURIComponent(eventinfo))
     : null;
@@ -221,6 +281,7 @@ export default function QRScreen() {
           }}
         >
           <QRCodeDisplay jsonData={qrData} size={200} />
+
           <Text
             style={{
               color: theme.colors.background,

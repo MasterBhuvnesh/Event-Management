@@ -14,3 +14,4 @@
 - Add necessary permissions to app.json and other relevant files if required.
 - App Icon.
 - Perfect Docs | Wiki | Readme .
+- toast in ticket/[qrcode]

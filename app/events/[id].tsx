@@ -138,7 +138,7 @@ export default function EventPage() {
         router.push(
           `/ticket/${code}?qrid=${registrationId}&eventinfo=${encodeURIComponent(
             JSON.stringify(eventInfo)
-          )}`
+          )}&userid=${userData.id}`
         );
       })
       .catch((err) => {
