@@ -12,3 +12,5 @@
 - Integrate Expo notifications.
 - Request permissions for all features (camera, sharing, etc.).
 - Add necessary permissions to app.json and other relevant files if required.
+- App Icon.
+- Perfect Docs | Wiki | Readme .

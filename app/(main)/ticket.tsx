@@ -1,4 +1,5 @@
 import { AppIcon } from '@/components/AppIcon';
+import DOMComponent from '@/components/test';
 import { theme } from '@/constants/theme';
 import { useToast } from '@/context/ToastContext';
 import useUserData from '@/hooks/useUserData';
@@ -30,6 +31,7 @@ export default function TicketScreen() {
     <View style={styles.container}>
       <View style={styles.ticketBox}>
         <Text style={styles.title}>My Ticket</Text>
+        <DOMComponent name="Europa" />
         <Text
           style={{
             color: theme.colors.text,
