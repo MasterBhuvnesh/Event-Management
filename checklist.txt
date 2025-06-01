@@ -1,4 +1,7 @@
 - Refactor hooks and remove existing toast notifications.
+- Add Fallback UI or Empty State - hooks
+- Add refetch() Method for refresh - hooks
+- For hooks refactor, use "hooks/useEventsData.ts" & "app/(main)/home.tsx" as reference.
 - Restructure file organization.
 - Improve user interface design.
 - Enhance ticket download and sharing functionality.
