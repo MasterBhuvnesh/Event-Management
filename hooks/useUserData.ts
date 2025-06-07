@@ -1,48 +1,66 @@
+import { useToast } from '@/context/ToastContext';
 import { supabase } from '@/lib/supabase';
 import { User } from '@/types/types';
 import { useUser } from '@clerk/clerk-expo';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-export default function useUserData() {
+interface UseUserDataReturn {
+  userData: User | null;
+  loading: boolean;
+  error: Error | null;
+  refetch: () => Promise<void>;
+}
+
+/**
+ * Custom hook to fetch and manage user data
+ * @returns {UseUserDataReturn} Object containing user data, loading state, error state and refetch function
+ */
+export default function useUserData(): UseUserDataReturn {
   const { user } = useUser();
+  const { showToast } = useToast();
   const [userData, setUserData] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchUserData = useCallback(async () => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const { data, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('clerk_id', user.id)
+        .single();
+
+      if (fetchError) {
+        throw new Error(fetchError.message);
+      }
+
+      if (!data) {
+        throw new Error('User not found');
+      }
+
+      setUserData(data);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : 'Failed to fetch user data';
+      setError(new Error(errorMessage));
+      showToast('Failed to fetch user data', 'error');
+      console.error('[useUserData] Error:', errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  }, [user?.id, showToast]);
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      if (!user?.id) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        const { data, error: fetchError } = await supabase
-          .from('users')
-          .select('*')
-          .eq('clerk_id', user.id);
-
-        console.log('Fetching user data for userId:', user.id); // Debug log
-        console.log('Supabase response:', data, fetchError); // Debug log
-        if (fetchError) throw fetchError;
-        if (!data || data.length === 0) {
-          setError('User not found');
-          setUserData(null);
-          return;
-        }
-        console.log('Fetched user data:', data); // Debug log
-
-        setUserData(data[0] as User);
-      } catch (err: any) {
-        setError(err.message);
-        console.error('Error fetching user data:', err); // Debug log
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserData();
-  }, [user]);
+  }, [fetchUserData]);
 
-  return { userData, loading, error };
+  return { userData, loading, error, refetch: fetchUserData };
 }
