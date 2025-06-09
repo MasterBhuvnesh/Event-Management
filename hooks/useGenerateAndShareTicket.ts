@@ -1,68 +1,38 @@
-import { useToast } from '@/context/ToastContext';
 import { GenerateTicketParams } from '@/types/qr';
 import { generateQRCode } from '@/utils/generateticket';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
-interface UseGenerateAndShareTicketReturn {
-  generateTicket: () => Promise<string | null>;
-  loading: boolean;
-  error: Error | null;
-}
-
-/**
- * Custom hook to handle ticket generation and sharing
- * @param {GenerateTicketParams} params - Parameters required for ticket generation
- * @returns {UseGenerateAndShareTicketReturn} Object containing generate function, loading state and error state
- */
-export function useGenerateAndShareTicket(
-  params: GenerateTicketParams
-): UseGenerateAndShareTicketReturn {
-  const { showToast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-
-  const generateTicket = useCallback(async () => {
-    if (!params.qrid || !params.qrcode || !params.userid) {
-      setError(new Error('Missing required parameters'));
-      return null;
-    }
-
+export function useGenerateAndShareTicket(params: GenerateTicketParams) {
+  const handleShareTicket = useCallback(async () => {
     try {
-      setLoading(true);
-      setError(null);
-
-      const result = await generateQRCode({
+      const resultData = await generateQRCode({
         qrId: params.qrid,
         qrCode: params.qrcode,
         userId: params.userid,
       });
 
-      if (!result.publicUrl) {
-        throw new Error('Failed to generate ticket URL');
+      if (!resultData.exists && resultData.publicUrl) {
+        console.log('🎟️ Ticket already exists, URL:', resultData.publicUrl); // Debugging line to check if ticket already exists
+        return;
       }
 
-      if (!result.exists) {
-        showToast('Ticket generated successfully', 'success');
+      if (resultData.exists && resultData.publicUrl) {
+        console.log('✅ Ticket does not exist, URL:', resultData.publicUrl); // Debugging line to check Ticket URL
+      } else {
+        console.error('❌ No Ticket URL returned'); // Debugging line to check if URL is missing
       }
-
-      return result.publicUrl;
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : 'Failed to generate ticket';
-      setError(new Error(errorMessage));
-      showToast('Failed to generate ticket', 'error');
-      console.error('[useGenerateAndShareTicket] Error:', errorMessage);
-      return null;
-    } finally {
-      setLoading(false);
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error ? error.message : 'Error generating ticket';
+      console.error('🚨 Error generating Ticket:', message); // Debugging line to check error
     }
-  }, [params.qrid, params.qrcode, params.userid, showToast]);
+  }, [params.qrid, params.qrcode, params.userid]);
 
   useEffect(() => {
     if (params.qrid && params.qrcode && params.userid) {
-      generateTicket();
+      handleShareTicket();
     }
-  }, [params.qrid, params.qrcode, params.userid, generateTicket]);
+  }, [params.qrid, params.qrcode, params.userid, handleShareTicket]);
 
-  return { generateTicket, loading, error };
+  return handleShareTicket;
 }
