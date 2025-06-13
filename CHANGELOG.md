@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/MasterBhuvnesh/Event-Management/compare/v1.0.0...v1.1.0) (2025-06-13)
+
+
+### Features
+
+* Add eas workflow ([13332de](https://github.com/MasterBhuvnesh/Event-Management/commit/13332defff6703030d2a396fcf0d39f077b360a3))
+
 # 1.0.0 (2025-06-13)
 
 
