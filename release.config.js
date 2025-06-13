@@ -10,7 +10,7 @@ module.exports = {
         '@semantic-release/git',
         {
           assets: ['CHANGELOG.md'],
-          message: 'chore(release): ${nextRelease.version} by event [skip ci]',
+          message: 'chore(release): ${nextRelease.version} by event ',
         },
       ],
       [
