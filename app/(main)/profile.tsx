@@ -48,7 +48,7 @@ export default function ProfileScreen() {
         {user?.fullName}
       </Text>
       <Text style={{ fontFamily: 'Regular', color: theme.colors.text }}>
-        Hello, {user?.emailAddresses[0].emailAddress}
+        Hi, {user?.emailAddresses[0].emailAddress}
       </Text>
 
       <View
